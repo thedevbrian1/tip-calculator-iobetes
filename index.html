@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tip calculator</title>
+    <link rel="stylesheet" href="src/output.css" />
+  </head>
+  <body class="max-w-3xl mx-auto grid lg:grid-cols-2 gap-4 mt-20">
+    <form
+      method="post"
+      class="bg-gray-200 space-y-6 p-4 rounded-lg"
+      id="tip-inputs"
+    >
+      <div class="flex flex-col gap-2">
+        <label for="bill">Bill</label>
+        <input
+          type="number"
+          id="bill"
+          name="bill"
+          placeholder="0"
+          class="bg-gray-100 p-4 rounded-md"
+          required
+        />
+      </div>
+
+      <fieldset>
+        <legend>Select tip %</legend>
+        <div class="grid grid-cols-3 gap-4 mt-2">
+          <label
+            class="bg-[#00484e] hover:bg-teal-600 text-white p-2 rounded-md"
+          >
+            5%
+            <!-- TODO: Use :has() -->
+            <input type="radio" name="tip-percent" value="5" required />
+          </label>
+          <label
+            class="bg-[#00484e] hover:bg-teal-600 text-white p-2 rounded-md"
+          >
+            10%
+            <input type="radio" name="tip-percent" value="10" />
+          </label>
+          <label
+            class="bg-[#00484e] hover:bg-teal-600 text-white p-2 rounded-md"
+          >
+            15%
+            <input type="radio" name="tip-percent" value="15" />
+          </label>
+          <label
+            class="bg-[#00484e] hover:bg-teal-600 text-white p-2 rounded-md"
+          >
+            25%
+            <input type="radio" name="tip-percent" value="25" />
+          </label>
+          <label
+            class="bg-[#00484e] hover:bg-teal-600 text-white p-2 rounded-md"
+          >
+            50%
+            <input type="radio" name="tip-percent" value="50" />
+          </label>
+          <label
+            class="bg-gray-100 p-2 rounded-md text-[#00484e] font-semibold"
+          >
+            Custom
+            <input type="radio" name="tip-percent" value="custom" />
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="flex flex-col gap-2">
+        <label for="no-of-people">Number of people</label>
+        <input
+          type="number"
+          name="no-of-people"
+          id="no-of-people"
+          placeholder="0"
+          required
+          class="bg-gray-100 p-4 rounded-md"
+        />
+      </div>
+
+      <button
+        class="bg-[#0d686d] hover:bg-teal-600 px-4 py-2 rounded-md text-white uppercase w-full active:scale-[.97] transition ease-in-out duration-300"
+      >
+        Calculate tip
+      </button>
+    </form>
+
+    <div class="bg-[#00474b] text-white p-8 rounded-lg">
+      <div class="flex gap-2 justify-between">
+        <p>Tip amount / person</p>
+        <p>$ <span id="tip-per-person">0.00</span></p>
+      </div>
+      <div class="flex gap-2 justify-between mt-8">
+        <p>Total amount / person</p>
+        <p>$ <span id="total-per-person">0.00</span></p>
+      </div>
+      <button
+        id="reset-btn"
+        class="bg-[#0d686d] hover:bg-teal-600 px-4 py-2 rounded-md text-white uppercase w-full mt-56 active:scale-[.97] transition ease-in-out duration-300"
+      >
+        Reset
+      </button>
+    </div>
+
+    <script>
+      let tipInputsForm = document.getElementById("tip-inputs");
+      let resetBtn = document.querySelector("#reset-btn");
+
+      let tipPerPersonInput = document.getElementById("tip-per-person");
+      let totalPerPersonInput = document.querySelector("#total-per-person");
+
+      tipInputsForm.addEventListener("submit", (event) => {
+        // Prevent form submission to the server
+        event.preventDefault();
+
+        // Get the submitted values
+        let formData = new FormData(tipInputsForm);
+
+        let bill = Number(formData.get("bill"));
+        let tipPercent = Number(formData.get("tip-percent"));
+        let noOfPeople = Number(formData.get("no-of-people"));
+
+        // Tip calculation
+        let tip = (tipPercent / 100) * bill;
+
+        let tipPerPerson = tip / noOfPeople;
+
+        // Total amount calculation
+        let totalAmount = bill + tip;
+        let totalAmoutPerPerson = (bill + tip) / noOfPeople;
+
+        // Update the total values in the UI
+
+        tipPerPersonInput.textContent = tipPerPerson.toFixed(2);
+        totalPerPersonInput.textContent = totalAmoutPerPerson.toFixed(2);
+      });
+
+      //   Reset values
+      resetBtn.addEventListener("click", () => {
+        tipInputsForm.reset();
+
+        tipPerPersonInput.textContent = "0.00";
+        totalPerPersonInput.textContent = "0.00";
+      });
+    </script>
+  </body>
+</html>
